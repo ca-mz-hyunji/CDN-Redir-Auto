@@ -34,14 +34,9 @@ def main():
     curr_path = str(os.getcwd())
     logging_file = input("Enter the Ticket Number to create a Log File: ")
     logging_file_path = os.path.join(curr_path, "log_files", logging_file)
-    ### for testing
-    print(logging_file_path)
 
     user_input_dict = userInput(excel_file_path)
     # user_input_dict = {{'src_url', 'domain', 'ip', 'path_from', 'dst_url', 'action'}}
-    ### for testing
-    for i in user_input_dict:
-        print(user_input_dict[i])
 
     for user_input in user_input_dict:
         # Retrieve variables from User Input CSV file
@@ -55,10 +50,40 @@ def main():
             domain_failed[user_input] = user_input_dict[user_input]
             log('Domain of Source URL is Invalid', logging_file_path)
             continue
-        
+
         # Step 2: Send Curl (check Destination & make a log if there wasn't)
         loc_eq_dst, location = curlCommand(domain, ip, path_from, dst_url, logging_file_path)
 
+        # Step 3: Check the 8 cases (Add, Modify, Delete)
+        new_action = checkAction(src_url, loc_eq_dst, location, action, logging_file_path)
+        
+        if action != new_action:    # if new_action is different from the initial action or False
+            if new_action == False:
+                check_action_failed[user_input] = user_input_dict[user_input]
+                continue
+            else:
+                user_input_dict[user_input]['action'] = new_action
+
+        # If "www.hyundai.com", Skip Steps 4,5,6 as base hosts are given
+        if domain == "www.hyundai.com":
+            base_hosts = {"basehost1": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com.json", "basehost2": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com-default.json"}
+        else:
+            log_files = grepCommand(path_from, logging_file_path)
+            virt_hosts = findVirtualHostname(log_files, path_from, logging_file_path)
+            base_hosts = findBaseHost(virt_hosts, logging_file_path)   # dictionary
+                                                                       # NEED TO CHANGE???
+        
+        config_pattern, config_location, config_file_loc, config_checked = openConfigFile(base_hosts, path_from, src_url, dst_url, action, logging_file_path)
+
+    ### for testing
+    print("------------")
+    for domain_failed_index in domain_failed:
+        print(f"ERROR: Index {domain_failed_index+1}: [{domain_failed[domain_failed_index]['src_url']}] does not have a valid domain name. Try it again later.")
+    print("------------")
+    for action_failed_index in check_action_failed:
+        print(f"ERROR: Index [{action_failed_index+1}] failed to check action. src_url: [{check_action_failed[action_failed_index]['src_url']}] & dst_url: [{check_action_failed[action_failed_index]['dst_url']}]")
+    print("------------")
+    
     return 0
 
 if __name__=='__main__':

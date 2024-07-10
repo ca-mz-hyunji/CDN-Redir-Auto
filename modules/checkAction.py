@@ -5,7 +5,7 @@ from .helpers import log
 def checkAction(src_url, loc_eq_dst, location, action, logging_file_path):
     action = action.lower()
     
-    if location: 
+    if location:
         if action == 'add':
             if loc_eq_dst == False:
                 if (location != src_url):
@@ -39,45 +39,6 @@ def checkAction(src_url, loc_eq_dst, location, action, logging_file_path):
             log("This Action is not appropriate in current Redirection situation", logging_file_path)
         
         return action 
+    
     else: # Case 9: 404 Error (location == None)
         return action
-
-
-'''
-    1. Add & Destination==Location
-        * No need to ADD --> action = False
-    2. Add & Destination!=Location & Location!=SourceURL
-        * Need to check action again -> Did you mean MODIFY ?
-    3. Add & Desitnation!=Location & Location==SourceURL
-        * Good to ADD 
-    4. Modify & Destination==Location
-        * No need to MODIFY
-    5. Modify & Destination!=Location & Location==SourceURL
-        * Need to check action again -> Did you mean ADD ?
-    6. Modify & Destination!=Location & Location!=SourceURL
-        * Good to MODIFY
-    7. Delete & Destination!=Location
-        * Mo need to DELETE
-    8. Delete & Destination==Location
-        * Good to DELETE
-'''
-
-'''
-if __name__=='__main__':
-    # Case 1 --> False
-    print(checkAction('http://www.kia.com/hello/world/', True, 'http://www.kia.com/hello/world/', 'ADD'))
-    # Case 2 --> modify
-    print(checkAction('http://www.kia.com/hello/world/', False, 'http://www.kia.ca/', 'ADD'))
-    # Case 3 --> add
-    print(checkAction('http://www.kia.com/hello/world/', False, 'http://www.kia.com/hello/world/', 'ADD'))
-    # Case 4 --> False
-    print(checkAction('http://www.kia.com/hello/world/', True, 'http://www.kia.ca/', 'MODIFY'))
-    # Case 5 --> add
-    print(checkAction('http://www.kia.com/hello/world/', False, 'http://www.kia.com/hello/world/', 'MODIFY'))
-    # Case 6 --> modify
-    print(checkAction('http://www.kia.com/hello/world/', False, 'http://www.kia.ca/', 'MODIFY'))
-    # Case 7 --> False
-    print(checkAction('http://www.kia.com/hello/world/', False, 'http://www.kia.ca/', 'Delete'))
-    # Case 8 --> delete
-    print(checkAction('http://www.kia.com/hello/world/', True, 'http://www.kia.ca/', 'Delete'))
-'''

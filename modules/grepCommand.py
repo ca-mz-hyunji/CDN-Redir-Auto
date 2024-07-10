@@ -5,7 +5,10 @@ def grepCommand(path_from, logging_file_path):
     log("Finding Redirection Log Files \n", logging_file_path)
 
     ### For SSH ###
-    log_files = subprocess.check_output(['grep', '-rl', path_from, '/m2log'], universal_newlines=True)
+    ### FOR LOCAL TESTING###
+    log_files = subprocess.check_output(['grep', '-rl', path_from, '/Users/hyunjikim/Desktop/GitHub/CDN-final/testing_files/m2log'], universal_newlines=True)
+
+    #log_files = subprocess.check_output(['grep', '-rl', path_from, '/m2log'], universal_newlines=True)
     log_files_list = log_files.strip().split('\n')
     log_files_list_sorted = sorted(log_files_list, key=len)
 
