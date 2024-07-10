@@ -18,7 +18,7 @@ def createBackup(json_path, logging_file_path):
     with open(json_path, "r") as origin:
         data = json.load(origin)
     with open(file_path, "w") as copy:
-        json.dump(data, copy, indent=3)
+        json.dump(data, copy, indent=1)
    
     print(f"Backup file {file_name} created in '{file_path}'\n")
     log(f"Backup file {file_name} created in '{file_path}'\n", logging_file_path)

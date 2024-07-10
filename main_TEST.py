@@ -33,14 +33,15 @@ def main():
     # Used to make detailed logs in a Log File and simplify the Terminal output
     curr_path = str(os.getcwd())
     logging_file = input("Enter the Ticket Number to create a Log File: ")
-    logging_file_path = os.path.join(curr_path, "log_files", logging_file)
+    logging_file_path = os.path.join(curr_path, "log_files", logging_file+".log")
 
     user_input_dict = userInput(excel_file_path)
     # user_input_dict = {{'src_url', 'domain', 'ip', 'path_from', 'dst_url', 'action'}}
 
     for user_input in user_input_dict:
         # Retrieve variables from User Input CSV file
-        src_url, domain, ip, path_from, dst_url, action = userData(user_input_dict[user_input])        
+        src_url, domain, ip, path_from, dst_url, action = userData(user_input_dict[user_input])
+        log('----------------------------------------', logging_file_path)        
         log(f"Index [{user_input+1}]", logging_file_path)
         log(f"Source URL: [{src_url}]", logging_file_path)
         log(f"Destination URL: [{dst_url}]", logging_file_path)
@@ -63,7 +64,7 @@ def main():
                 continue
             else:
                 user_input_dict[user_input]['action'] = new_action
-
+    
         # If "www.hyundai.com", Skip Steps 4,5,6 as base hosts are given
         if domain == "www.hyundai.com":
             base_hosts = {"basehost1": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com.json", "basehost2": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com-default.json"}
@@ -71,20 +72,42 @@ def main():
             log_files = grepCommand(path_from, logging_file_path)
             virt_hosts = findVirtualHostname(log_files, path_from, logging_file_path)
             base_hosts = findBaseHost(virt_hosts, logging_file_path)   # dictionary
-                                                                       # NEED TO CHANGE???
+                                                                       # NEED TO CHANGE??? - 왜
         
-        config_pattern, config_location, config_file_loc, config_checked = openConfigFile(base_hosts, path_from, src_url, dst_url, action, logging_file_path)
+        config_pattern, config_location, config_file_loc, config_checked = openConfigFile(base_hosts, path_from, src_url, dst_url, new_action, logging_file_path)
+        if config_checked == False:
+            check_config_failed[user_input] = user_input_dict[user_input]
+            continue
+
+        #logRedirRules(config_pattern, config_location, action, path_from, dst_url, logging_file_path)
+
+        # Note: Create backup only when it is the first redirection rule (no need to create multiple backup files) --> IN PROCESS
+        if config_file_loc not in config_file_list:
+            config_file_list.append(config_file_loc)
+            createBackup(config_file_loc, logging_file_path)
+
+        updateFile(path_from, dst_url, new_action, config_file_loc, logging_file_path)
 
     ### for testing
     print("------------")
-    for domain_failed_index in domain_failed:
-        print(f"ERROR: Index {domain_failed_index+1}: [{domain_failed[domain_failed_index]['src_url']}] does not have a valid domain name. Try it again later.")
+    if domain_failed:
+        for domain_failed_index in domain_failed:
+            print(f"ERROR: Index {domain_failed_index+1}: [{domain_failed[domain_failed_index]['src_url']}] does not have a valid domain name. Try it again later.")
+    else:
+        print("ALL domains were valid")
     print("------------")
-    for action_failed_index in check_action_failed:
-        print(f"ERROR: Index [{action_failed_index+1}] failed to check action. src_url: [{check_action_failed[action_failed_index]['src_url']}] & dst_url: [{check_action_failed[action_failed_index]['dst_url']}]")
+    if check_action_failed:
+        for action_failed_index in check_action_failed:
+            print(f"ERROR: Index [{action_failed_index+1}] failed to check action. src_url: [{check_action_failed[action_failed_index]['src_url']}] & dst_url: [{check_action_failed[action_failed_index]['dst_url']}]")
+    else:
+        print("ALL actions were valid")
     print("------------")
-    
-    return 0
+    if check_config_failed:
+        for config_failed_index in check_config_failed:
+            print(f"ERROR: Index [{config_failed_index+1}] with src_url: [{check_config_failed[config_failed_index]['src_url']}] could not find the rule in any configuration file")
+    else:
+        print("ALL config files were valid")
+    print("------------")
 
 if __name__=='__main__':
     main()

@@ -13,9 +13,12 @@ def openConfigFile(base_hosts, path_from, src_url, dst_url, action, logging_file
     config_file_loc = None
     config_checked = True
     count = 1
-
+    '''
     for key in base_hosts:
         base_hosts_list.append(base_hosts[key])
+    '''
+    ### FOR LOCAL TESTING
+    base_hosts_list.append('/Users/hyunjikim/Desktop/GitHub/CDN-final/testing_files/www.kia.com-acl.json')
 
     for config_file in base_hosts_list:
         if not os.path.exists(config_file):
