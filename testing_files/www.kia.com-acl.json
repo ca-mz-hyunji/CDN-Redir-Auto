@@ -1,0 +1,306 @@
+{
+  "name": "www.kia.com",
+  "enable": true,
+  "listen": "*:80",
+  "origin": {
+    "protocol": "http",
+    "address": [
+      "127.0.0.1"
+    ]
+  },
+  "mode": {
+    "volatile": true,
+    "instant": false,
+    "abstract": false,
+    "facadeHost": null
+  },
+  "functions": {
+    "contents": {
+      "dims": {
+        "meta": {
+          "enable": true,
+          "keyword": "dims",
+          "minSourceSize": 0,
+          "maxSourceSize": 20
+        },
+        "quality": {
+          "max": 99,
+          "format": 99
+        },
+        "jpg": {
+          "preoptimize": {
+            "enable": true,
+            "minSize": 1024
+          }
+        }
+      }
+    },
+    "network": {
+      "cache": {
+        "ttl": {
+          "resCode": {
+            "res2xx": {
+              "sec": 0,
+              "ratio": 0,
+              "max": 0
+            },
+            "noCache": {
+              "sec": 0,
+              "ratio": 0,
+              "max": 0,
+              "maxAge": 0
+            },
+            "res3xx": {
+              "sec": 0
+            },
+            "res4xx": {
+              "sec": 10
+            },
+            "res5xx": {
+              "sec": 10
+            },
+            "onError": {
+              "connectTimeout": 30,
+              "receiveTimeout": 30
+            }
+          },
+          "policies": {
+            "priority": [
+              "cc_nocache",
+              "rescode",
+              "cc_maxage",
+              "custom"
+            ],
+            "extendBy4xx": false,
+            "extendBy5xx": false,
+            "unvalidatableObjectResCode": 0,
+            "baseTime": "response"
+          }
+        },
+        "cachingKey": {
+          "postMethod": {
+            "enable": false,
+            "bodySensitive": true,
+            "bodyContentLengthMax": 102400
+          },
+          "case": {
+            "enable": true
+          },
+          "queryString": {
+            "enable": true,
+            "matchingList": []
+          }
+        },
+        "purge": {
+          "mode": "sync",
+          "noCacheRequestExpire": false,
+          "refreshExpired": true,
+          "purge2Expire": "none",
+          "rootPurgeExpire": "all",
+          "rootHardPurge": true,
+          "resCodeNoCtrlTarget": 404,
+          "resCodeDenyCtrlTarget": 403,
+          "queryStringCollective": false
+        }
+      },
+      "http": {
+        "frontEnd": {
+          "session": {
+            "keepAliveSec": 620
+          },
+          "headers": {
+            "via": {
+              "enable": false
+            },
+            "cacheOriginal": {
+              "enable": false,
+              "standard": true
+            },
+            "server": {
+              "enable": false
+            },
+            "modify": {
+              "enable": true,
+              "matchFirstOnly": false,
+              "matchingList": [
+                {
+                  "pattern": "$URL[*]",
+                  "header": "$RES[vary]",
+                  "mode": "unset"
+                }
+              ]
+            },
+            "age": {
+              "enable": false
+            }
+          },
+          "accessControl": {
+            "enable": true,
+            "defaultAction": "allow",
+            "matchingList": [
+              {
+                "pattern": "$HEADER[post] & !HEADER[Content-Length]",
+                "action": "deny",
+                "denialCode": 411
+              },
+              {
+                "pattern": "$URL[/fr/fr910_jclegallou/]",
+                "action": "redirect",
+                "location": "https://www.kia.com/fr/concessions/legallou-viry/",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/fr/fr911_etsjclegallou]",
+                "action": "redirect",
+                "location": "https://www.kia.com/fr/concessions/legallou-corbeil/",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/fr/fr911_etsjclegallou/]",
+                "action": "redirect",
+                "location": "https://www.kia.com/fr/concessions/legallou-corbeil/",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/fr/fr919_carmin-automobiles]",
+                "action": "redirect",
+                "location": "https://www.kia.com/fr/concessions/etampes/",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/es/business/overview/]",
+                "action": "redirect",
+                "location": "https://www.kia.com/es/programa-kia-empresas/kia-empresas/",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/es/modelos/e-soul/]",
+                "action": "redirect",
+                "location": "https://www.kia.com/es/",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/au/cars/sportage-hybrid.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/au/cars/sportage-hybrid/features.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/au/cars/tasman.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/au/cars/tasman/register.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/au/electric-cars.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/au/electric-cars/electric-and-hybrid.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/mx/discover-kia/pbv.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/mx/discover-kia/pbv/pbv-about.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/pe/showroom/new-sonet.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/pe/showroom/new-sonet/features.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/ec/showroom/K3_Cross.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/ec/showroom/K3_Cross/features.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/ph/showroom/sonet.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/ph/showroom/sonet/features.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/aw/owners/ev-experience.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/aw/owners/ev-experience/ev-benefits.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/aw/owners/connectivity.html]",
+                "action": "redirect",
+                "location": "https://www.kia.com/aw/owners/connectivity/navigation-update.html",
+                "denialCode": 301
+              },
+              {
+                "pattern": "$URL[/nl/dealers/sliedrecht/]",
+                "action": "redirect",
+                "location": "https://www.kia.com/nl/dealers/auto-dewaard/",
+                "denialCode": 301
+              }
+            ]
+          },
+          "bypass": {
+            "stickiness": {
+              "enable": false,
+              "mode": "app_cookie_origin",
+              "cookieHint": "M2_BYPASS_TOKEN",
+              "cookieOrigin": "JSESSIONID"
+            },
+            "getMethod": {
+              "enable": true
+            },
+            "postMethod": {
+              "enable": true
+            },
+            "matchingList": []
+          }
+        },
+        "backEnd": {
+          "session": {
+            "connectTimeout": 7,
+            "receiveTimeout": 120,
+            "reuseTimeout": 4,
+            "balanceMode": "hash"
+          },
+          "health": {
+            "exclusion": {
+              "count": 100,
+              "events": {
+                "serverClosed": false
+              }
+            },
+            "recovery": {
+              "cycle": 3,
+              "count": 1,
+              "responseCode": 0,
+              "url": "/",
+              "log": true
+            }
+          },
+          "headers": {
+            "host": {
+              "enable": true,
+              "value": "www.kia.com-default"
+            },
+            "userAgent": {
+              "enable": true,
+              "value": "*"
+            },
+            "originalEtag": {
+              "enable": true
+            },
+            "modify": {
+              "enable": true,
+              "matchFirstOnly": false,
+              "matchingList": []
+            }
+          },
+          "urlRewrites": []
+        }
+      }
+    }
+  },
+  "urlRewrites": []
+}

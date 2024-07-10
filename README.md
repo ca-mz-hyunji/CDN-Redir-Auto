@@ -1,1 +1,0 @@
-# CDN Redirection Automatic Code

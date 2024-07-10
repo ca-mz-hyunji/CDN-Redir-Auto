@@ -1,0 +1,1393 @@
+{
+    "meta": {
+        "version": "1.2.5",
+        "admin": "cdn@mz.co.kr"
+    },
+    "env": {
+        "management": {
+            "api": {
+                "port": 10040,
+                "defaultRole": "admin",
+                "multipartName": "settingFile"
+            },
+            "server": {
+                "enable": false,
+                "features": {
+                    "setting": {
+                        "enable": true,
+                        "feed": {
+                            "type": "tgzPolling",
+                            "info": {
+                                "url": "https://storage.googleapis.com/hmg-prd-m2live-config/setting.tgz",
+                                "schedule": "*/1 * * * * *",
+                                "timeout": 5
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "properties": {
+            "memoryUsage": {
+                "totalUsableRatio": 100,
+                "workingRatio": 60,
+                "partition": "8:2"
+            },
+            "process": {
+                "core": {
+                    "memory": "auto",
+                    "concurrent": 4,
+                    "respawnable": 1,
+                    "keepalive": {
+                        "maxcount": 10000,
+                        "maxage": "1h",
+                        "timewait": "1m"
+                    }
+                }
+            },
+            "inspection": {
+                "process": {
+                    "enable": true,
+                    "retention": 14,
+                    "schedule": "5 * * * * *",
+                    "dir": "log/process"
+                }
+            }
+        },
+        "rt": {
+            "properties": {
+                "cacheObjectSize": 900,
+                "enableEmergencyMode": false,
+                "enableSyncStale": true,
+                "writeCountSmallFile": 0,
+                "enableRrd": true
+            },
+            "localCacheStorage": {
+                "meta": {
+                    "diskFailSec": 60,
+                    "diskFailCount": 10,
+                    "onCrash": "hang"
+                },
+                "disks": [
+                    {
+                        "mount": "/cache1",
+                        "quota": 80,
+                        "quotaUnit": "size",
+                        "cleanupSize": 0
+                    },
+                    {
+                        "mount": "/cache2",
+                        "quota": 80,
+                        "quotaUnit": "size",
+                        "cleanupSize": 0
+                    },
+                    {
+                        "mount": "/cache3",
+                        "quota": 80,
+                        "quotaUnit": "size",
+                        "cleanupSize": 0
+                    },
+                    {
+                        "mount": "/cache4",
+                        "quota": 80,
+                        "quotaUnit": "size",
+                        "cleanupSize": 0
+                    },
+                    {
+                        "mount": "/cache5",
+                        "quota": 80,
+                        "quotaUnit": "size",
+                        "cleanupSize": 0
+                    }
+                ],
+                "cleanup": {
+                    "time": "02:00",
+                    "age": 0,
+                    "emptyDir": "delete",
+                    "fileCount": 0,
+                    "defaultDiskCleanupSize": 0
+                }
+            }
+        },
+        "log": {
+            "info": {
+                "enable": true,
+                "rolling": {
+                    "size": 1
+                },
+                "retention": 5,
+                "compression": false
+            },
+            "system": {
+                "enable": true,
+                "rolling": {
+                    "size": 1
+                },
+                "retention": 5,
+                "compression": false
+            },
+            "originError": {
+                "enable": true,
+                "rolling": {
+                    "size": 1
+                },
+                "retention": 5,
+                "warning": false,
+                "compression": false
+            }
+        },
+        "network": {
+            "passiveSockets": {
+                "listenIps": [
+                    "0.0.0.0"
+                ],
+                "maxCount": 80000,
+                "reopenRatio": 75
+            },
+            "http": {
+                "recvBufferSize": 16384,
+                "initCount": 20000,
+                "increaseCount": 6000
+            },
+            "https": {
+                "enableSni": true,
+                "initCount": 20000,
+                "increaseCount": 6000
+            },
+            "http2": {
+                "enable": false,
+                "concurrentStreamMaxCount": 10,
+                "keepAliveSec": 10,
+                "maxRequestHeaderFields": 200,
+                "maxResponseHeaderFields": 500
+            }
+        }
+    },
+    "functions": {
+        "network": {
+            "http": {
+                "frontEnd": {
+                    "session": {
+                        "keepAliveSec": 620
+                    },
+                    "headers": {
+                        "etag": {
+                            "enable": true
+                        },
+                        "via": {
+                            "enable": true
+                        },
+                        "age": {
+                            "enable": false
+                        },
+                        "server": {
+                            "enable": true
+                        },
+                        "connection": {
+                            "directive": "keep-alive"
+                        },
+                        "lastModified": {
+                            "rule": "orlater"
+                        },
+                        "ifRange": {
+                            "enable": true,
+                            "purge": false
+                        },
+                        "keepAlive": {
+                            "enable": true,
+                            "max": 0
+                        },
+                        "modify": {
+                            "enable": true,
+                            "matchFirstOnly": false
+                        }
+                    },
+                    "accessControl": {
+                        "enable": false,
+                        "defaultAction": "allow"
+                    },
+                    "optionsRequest": {
+                        "enable": false
+                    },
+                    "bypass": {
+                        "session": {
+                            "connectTimeout": 5,
+                            "receiveTimeout": 300
+                        },
+                        "noCacheRequest": {
+                            "enable": false
+                        },
+                        "getMethod": {
+                            "enable": false
+                        },
+                        "postMethod": {
+                            "enable": true
+                        },
+                        "putMethod": {
+                            "enable": false
+                        }
+                    }
+                },
+                "backEnd": {
+                    "session": {
+                        "connectTimeout": 3,
+                        "receiveTimeout": 10,
+                        "reuseTimeout": 60,
+                        "balanceMode": "roundrobin"
+                    },
+                    "dns": {
+                        "ttlMin": 0,
+                        "ttlMax": 0
+                    },
+                    "health": {
+                        "exclusion": {
+                            "count": 3,
+                            "events": {
+                                "serverClosed": false
+                            }
+                        },
+                        "recovery": {
+                            "cycle": 10,
+                            "count": 3,
+                            "responseCode": 0,
+                            "url": "/",
+                            "log": true
+                        }
+                    },
+                    "headers": {
+                        "cacheOriginal": {
+                            "enable": false,
+                            "standard": false
+                        },
+                        "host": {
+                            "enable": false,
+                            "value": null
+                        },
+                        "userAgent": {
+                            "enable": true,
+                            "value": "*"
+                        },
+                        "xff": {
+                            "appendProxy": true
+                        },
+                        "ifRange": {
+                            "enable": false
+                        },
+                        "wholeClientRequest": {
+                            "enable": false
+                        },
+                        "originalEtag": {
+                            "enable": true
+                        },
+                        "initByFullRange": {
+                            "enable": false
+                        },
+                        "modify": {
+                            "enable": false,
+                            "matchFirstOnly": false
+                        }
+                    }
+                }
+            },
+            "proxy": {
+                "meta": {
+                    "enable": true,
+                    "keyword": "proxy"
+                }
+            }
+        },
+        "operations": {
+            "chaining": {
+                "pipe": {
+                    "flags": "nourlrewrite;nosessionurlrewrite;reqfilemeta;",
+                    "conflict": "skip"
+                }
+            },
+            "log": {
+                "meta": {
+                    "dir": "/m2log"
+                },
+                "access": {
+                    "enable": true,
+                    "rolling": {
+                        "time": 1440
+                    },
+                    "retention": 10,
+                    "compression": false,
+                    "xff": "all",
+                    "form": "custom",
+                    "format": "%a %A %b id=%{userid}C %f %h %H \"%{ETag}l\" %m %P \"%r\" %s %t %T %X %I %O %R %e %S %K \"%{True-Client-IP}i\" \"%{Original-Host}i\" \"%{referer}i\" \"%{server-port}i\" \"%{X-Client-Geo-Location}i\" \"%{X-Cache-ID}i\" %L %E \"%{DC}i\" \"%{X-Gcp-Edgescape}i\" \"%{Transfer-Encoding}l\"",
+                    "loopback": false
+                },
+                "origin": {
+                    "enable": true,
+                    "rolling": {
+                        "time": 1440
+                    },
+                    "retention": 10,
+                    "compression": false,
+                    "loopback": true
+                },
+                "dns": {
+                    "enable": true,
+                    "rolling": {
+                        "size": 10
+                    },
+                    "retention": 10,
+                    "compression": false
+                },
+                "dims": {
+                    "enable": true,
+                    "rolling": {
+                        "time": 1440
+                    },
+                    "retention": 10,
+                    "compression": false
+                },
+                "monitoring": {
+                    "enable": true,
+                    "rolling": {
+                        "time": 60
+                    },
+                    "retention": 5,
+                    "compression": false,
+                    "form": "json"
+                }
+            }
+        }
+    },
+    "hosting": [
+        {
+            "name": "www.kia.com",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com-acl.json",
+                "volatile": true
+            }
+        },
+        {
+            "name": "www.kia.com-default",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com-default.json",
+                "volatile": true
+            }
+        },
+        {
+            "name": "www.kia.com-origin-root-kr-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "origin-root.kr.kia.com:488"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "origin-root.kr.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-origin-root-kr-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "origin-root.kr.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "origin-root.kr.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-origin1-kr-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "origin1.kr.kia.com",
+                    "origin2.kr.kia.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-origin1-kr-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "origin1.kr.kia.com",
+                    "origin2.kr.kia.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-be-kia-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "be.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-be-kia-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "be.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org1-www.kia.com",
+		    "org2-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-8004",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org1-www.kia.com:8004",
+		    "org2-www.kia.com:8004"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            },
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "www.kia.com:8004"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-8005",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org1-www.kia.com:8005",
+		    "org2-www.kia.com:8005"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            },
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "www.kia.com:8005"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-8008",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org1-www.kia.com:8008",
+		    "org2-www.kia.com:8008"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            },
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "www.kia.com:8008"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "org1-www.kia.com",
+		    "org2-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-84",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "org1-www.kia.com:84",
+		    "org2-www.kia.com:84"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-85",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "org1-www.kia.com:85",
+		    "org2-www.kia.com:85"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-88",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "org1-www.kia.com:88",
+		    "org2-www.kia.com:88"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 15
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-kwp-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "kwp1.kia.com",
+                    "kwp2.kia.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-kwp-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "kwp1.kia.com",
+                    "kwp2.kia.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-org-kwcms-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org-kwcms.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "org-kwcms.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-kwcms-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "org-kwcms.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "org-kwcms.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-ilead-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "ilead.itrack.it"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-ilead-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "ilead.itrack.it"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-origin-redesign-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "origin-redesign.kia.com:1080"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "origin-redesign.kia.com:1080"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-origin-redesign-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "origin-redesign.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "origin-redesign.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-pl-kia-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "pl.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-pl-kia-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "pl.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-cz-kia-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "cz.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-cz-kia-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "cz.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-lu-kia-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "lu.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-lu-kia-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "lu.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-kme-p-lb01-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "kme-p-lb01.rhm.hosting"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-kme-p-lb01-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "kme-p-lb01.rhm.hosting"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-eu-www-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": false
+            },
+            "origin": {
+                "address": [
+                    "eu-www.kia.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-eu-www-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": false
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "eu-www.kia.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-at-kia-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "at.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-at-kia-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "at.kia.motortrak.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-kialamp01-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "kialamp01.boolhosting.net"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-kialamp01-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "kialamp01.boolhosting.net"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-org-dealers-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org-dealers.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "org-dealers.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-dealers-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "org-dealers.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "org-dealers.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-origin-www-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "origin-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "connectTimeout": 7
+                            },
+                            "health": {
+                                "exclusion": {
+                                    "count": 100
+                                },
+                                "recovery": {
+                                    "cycle": 3,
+                                    "count": 1,
+                                    "responseCode": 0,
+                                    "url": "/",
+                                    "log": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-origin-www-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "origin-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "connectTimeout": 7
+                            },
+                            "health": {
+                                "exclusion": {
+                                    "count": 100
+                                },
+                                "recovery": {
+                                    "cycle": 3,
+                                    "count": 1,
+                                    "responseCode": 0,
+                                    "url": "/",
+                                    "log": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-gcs",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "storage.googleapis.com/www-kia-com-in-vr"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "storage.googleapis.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+	{
+            "name": "www.kia.com-commerce-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "dev-commerce.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "dev-commerce.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+	{
+            "name": "www.kia.com-commerce-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "dev-commerce.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "dev-commerce.kia.com"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "fallback.hmghae.com",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/fallback.hmghae.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "https",
+                "address": [
+                    "storage.googleapis.com"
+                ]
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-api-8008",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org1-www.kia.com:8008",
+		    "org2-www.kia.com:8008"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 120
+                            },
+                            "headers": {
+                                "host": {
+                                    "enable": true,
+                                    "value": "www.kia.com:8008"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-api-88",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "org1-www.kia.com:88",
+		    "org2-www.kia.com:88"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 120
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-api-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "org1-www.kia.com",
+		    "org2-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 120
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-org-www-api-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+		    "org1-www.kia.com",
+		    "org2-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 120
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-eu-www-api-443",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "address": [
+                    "eu-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 120
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "www.kia.com-eu-www-api-80",
+            "mode": {
+                "basehost": "/usr/local/m2/json/www.kia.com/www.kia.com.json",
+                "volatile": true
+            },
+            "origin": {
+                "protocol": "http",
+                "address": [
+                    "eu-www.kia.com"
+                ]
+            },
+            "functions": {
+                "network": {
+                    "http": {
+                        "backEnd": {
+                            "session": {
+                                "receiveTimeout": 120
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
