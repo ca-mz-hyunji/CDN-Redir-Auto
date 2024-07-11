@@ -25,7 +25,8 @@ def main():
 
     # Step 1: Get inputs from User
     excel_file_path = input("Type in the CSV file path: ")
-    # /Users/hyunjikim/Desktop/GitHub/CDN-final/test.csv
+    # Mac: /Users/hyunjikim/Desktop/GitHub/CDN-final/test.csv
+    # Windows: C:\\Users\\Kim\\Desktop\\GitHub\\CDN-final\\test.csv
     if not os.path.exists(excel_file_path):
         border_msg(f"CSV file '{excel_file_path}' not found.")
         return
@@ -67,9 +68,15 @@ def main():
     
         # If "www.hyundai.com", Skip Steps 4,5,6 as base hosts are given
         if domain == "www.hyundai.com":
-            base_hosts = {"basehost1": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com.json", "basehost2": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com-default.json"}
+            #base_hosts = {"basehost1": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com.json", "basehost2": "/usr/local/m2/json/www.hyundai.com/www.hyundai.com-default.json"}
+            ### For testing on Windows
+            base_hosts = {"basehost1": "C:\\Users\\Kim\\Desktop\\GitHub\\CDN-final\\testing_files\\www.hyundai.com.json",
+                          "basehost2": "C:\\Users\\Kim\\Desktop\\GitHub\\CDN-final\\testing_files\\www.hyundai.com-default.json"}
         else:
-            log_files = grepCommand(path_from, logging_file_path)
+            #log_files = grepCommand(path_from, logging_file_path)
+            ### For testing on Windows
+            log_files = ["C:\\Users\\Kim\\Desktop\\GitHub\\CDN-final\\testing_files\\m2log\\www.kia.com\\access.log",
+                         "C:\\Users\\Kim\\Desktop\\GitHub\\CDN-final\\testing_files\\m2log\\www.kia.com\\access_20240710_0000.log"]
             virt_hosts = findVirtualHostname(log_files, path_from, logging_file_path)
             base_hosts = findBaseHost(virt_hosts, logging_file_path)   # dictionary
                                                                        # NEED TO CHANGE??? - 왜
@@ -84,7 +91,7 @@ def main():
         # Note: Create backup only when it is the first redirection rule (no need to create multiple backup files) --> IN PROCESS
         if config_file_loc not in config_file_list:
             config_file_list.append(config_file_loc)
-            createBackup(config_file_loc, logging_file_path)
+            #createBackup(config_file_loc, logging_file_path)
 
         updateFile(path_from, dst_url, new_action, config_file_loc, logging_file_path)
 

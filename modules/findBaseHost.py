@@ -12,7 +12,9 @@ def findBaseHost(virt_hosts, logging_file_path):
 
     #json_file = "/usr/local/m2/setting.json"
     ### FOR LOCAL TESTING
-    json_file = '/Users/hyunjikim/Desktop/GitHub/CDN-final/testing_files/setting.json'
+    # Mac: json_file = '/Users/hyunjikim/Desktop/GitHub/CDN-final/testing_files/setting.json'
+    # Windows:
+    json_file = 'C:\\Users\\Kim\\Desktop\\GitHub\\CDN-final\\testing_files\\setting.json'
 
     if not os.path.exists(json_file):
         log(f"JSON file '{json_file}' not found.", logging_file_path)
