@@ -182,7 +182,7 @@
               {
                 "pattern": "$URL[/au/cars/sportage-hybrid.html]",
                 "action": "redirect",
-                "location": "https://www.kia.com/au/cars/sportage-hybrid/features.html",
+                "location": "https://www.kia.com/au/cars/sportage-hybrid/features/0000/.html",
                 "denialCode": 301
               },
               {
@@ -200,37 +200,37 @@
               {
                 "pattern": "$URL[/mx/discover-kia/pbv.html]",
                 "action": "redirect",
-                "location": "https://www.kia.com/mx/discover-kia/pbv/pbv-about.html",
+                "location": "https://www.kia.com/mx/discover-kia/pbv/pbv-about/0000/.html",
                 "denialCode": 301
               },
               {
                 "pattern": "$URL[/pe/showroom/new-sonet.html]",
                 "action": "redirect",
-                "location": "https://www.kia.com/pe/showroom/new-sonet/features.html",
+                "location": "https://www.kia.com/pe/showroom/new-sonet/features/0000/.html",
                 "denialCode": 301
               },
               {
                 "pattern": "$URL[/ec/showroom/K3_Cross.html]",
                 "action": "redirect",
-                "location": "https://www.kia.com/ec/showroom/K3_Cross/features.html",
+                "location": "https://www.kia.com/ec/showroom/K3_Cross/features/0000/.html",
                 "denialCode": 301
               },
               {
                 "pattern": "$URL[/ph/showroom/sonet.html]",
                 "action": "redirect",
-                "location": "https://www.kia.com/ph/showroom/sonet/features.html",
+                "location": "https://www.kia.com/ph/showroom/sonet/features/0000/.html",
                 "denialCode": 301
               },
               {
                 "pattern": "$URL[/aw/owners/ev-experience.html]",
                 "action": "redirect",
-                "location": "https://www.kia.com/aw/owners/ev-experience/ev-benefits.html",
+                "location": "https://www.kia.com/aw/owners/ev-experience/ev-benefits/0000/.html",
                 "denialCode": 301
               },
               {
                 "pattern": "$URL[/aw/owners/connectivity.html]",
                 "action": "redirect",
-                "location": "https://www.kia.com/aw/owners/connectivity/navigation-update.html",
+                "location": "https://www.kia.com/aw/owners/connectivity/navigation-update/0000/.html",
                 "denialCode": 301
               },
               {
